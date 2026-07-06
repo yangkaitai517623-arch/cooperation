@@ -104,9 +104,9 @@ const dialogVisible = ref(false)
 const currentRow = ref({})
 
 /** 状态映射：Tag类型 */
-const getStatusType = (status) => ({ 0: 'success', 1: 'warning', 2: 'info' }[status] || 'info')
+const getStatusType = (status) => ({ 0: 'warning', 1: 'success', 2: 'info' }[status] || 'info')
 /** 状态文本：0=审核中, 1=已发布, 2=已下架 */
-const getStatusText = (status) => ({ 0: '已发布', 1: '审核中', 2: '已下架' }[status] || status)
+const getStatusText = (status) => ({ 0: '审核中', 1: '已发布', 2: '已下架' }[status] || status)
 
 /** 筛选器值映射 */
 const statusMap = { 'pending': 0, 'published': 1, 'off_shelf': 2 }

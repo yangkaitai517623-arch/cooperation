@@ -14,7 +14,7 @@
         <div v-for="(p, i) in posts" :key="p.id" class="post-card" :style="{ '--i': i }">
           <!-- 帖子头部：作者头像 + 名称 + 时间 -->
           <div class="post-header">
-            <div class="post-avatar">{{ p.authorName[0] || '用' }}</div>
+            <div class="post-avatar">{{ p.authorName?.[0] || '用' }}</div>
             <div class="post-meta"><strong>{{ p.authorName }}</strong><time>{{ p.createdAt }}</time></div>
           </div>
           <!-- 帖子标题：点击进入详情页 -->
@@ -94,13 +94,13 @@ const likedPosts = ref(new Set())
  * 加载帖子列表（最近20条）
  * API: GET /forum/posts?page=1&size=20
  */
-async function loadPosts () { try { const { data } = await api.get('/forum/post', { params: { page: 1, size: 20 } }); if (data.code === 200) posts.value = data.data?.records || [] } catch {} }
+async function loadPosts () { try { const { data } = await api.get('/forum/posts', { params: { page: 1, size: 20 } }); if (data.code === 200) posts.value = data.data?.records || [] } catch {} }
 
 /**
  * 发布新帖
  * API: POST /forum/posts { title, content }
  */
-async function doPost () { if (!pf.title || !pf.content) { ElMessage.warning('请填写标题和内容'); return }; ld.value = true; try { const { data } = await api.post('/forum/posts', pf); if (data.code === 200) { ElMessage.success('发布成功'); dlg.value = false; pf.title = ''; pf.content = ''; loadPosts } } catch {} finally { ld.value = false } }
+async function doPost () { if (!pf.title || !pf.content) { ElMessage.warning('请填写标题和内容'); return }; ld.value = true; try { const { data } = await api.post('/forum/posts', pf); if (data.code === 200) { ElMessage.success('发布成功'); dlg.value = false; pf.title = ''; pf.content = ''; loadPosts() } } catch {} finally { ld.value = false } }
 
 /**
  * 切换帖子的点赞状态

@@ -105,7 +105,7 @@ public class ForumService {
         ForumPost post = forumPostMapper.selectById(id);
         if (post != null) {
             // 浏览量+1
-            post.setViewCount(post.getViewCount() + 10);
+            post.setViewCount(post.getViewCount() + 1);
             forumPostMapper.updateById(post);
             return convertToPostVO(post);
         }

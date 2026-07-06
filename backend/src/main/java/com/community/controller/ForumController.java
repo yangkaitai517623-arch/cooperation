@@ -82,7 +82,7 @@ public class ForumController {
     public Result<PostVO> getPost(@PathVariable Long id) {
         try {
             PostVO post = forumService.getPostById(id);
-            if (post != null) {
+            if (post == null) {
                 return Result.error("帖子不存在");
             }
             return Result.success(post);

@@ -163,7 +163,7 @@ async function submitComment () {
   commentLoading.value = true
   try {
     const { data } = await api.post('/forum/comments', {
-      postId: postId.value,
+      postId: postId,
       content: commentContent.value
     })
     if (data.code === 200) {
@@ -217,14 +217,14 @@ async function toggleLikeComment (comment) {
     if (isCommentLiked) {
       const { data } = await unlikeComment(comment.id)
       if (data.code === 200) {
-        comment.value.likeCount = data.data
+        comment.likeCount = data.data
         likedComments.value.delete(comment.id)
         ElMessage.success('已取消点赞')
       }
     } else {
       const { data } = await likeComment(comment.id)
       if (data.code === 200) {
-        comment.value.likeCount = data.data
+        comment.likeCount = data.data
         likedComments.value.add(comment.id)
         ElMessage.success('点赞成功')
       }
