@@ -28,5 +28,11 @@
             room = #{room}
         WHERE id = #{id}
     </update>
+
+    <update id="updatePassword">
+        UPDATE user
+        SET password = #{password}
+        WHERE id = #{id}
+    </update>
     
 </mapper>

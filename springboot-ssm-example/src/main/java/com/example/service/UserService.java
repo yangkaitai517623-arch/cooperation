@@ -12,5 +12,7 @@ public interface UserService {
 
     User getProfile(Integer id);
 
-    boolean updateProfile(User user);
+    String updateProfile(User user);
+
+    String changePassword(Integer id, String oldPassword, String newPassword);
 }

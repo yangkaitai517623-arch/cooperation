@@ -16,4 +16,6 @@ public interface UserMapper {
     User findById(@Param("id") Integer id);
 
     int updateProfile(User user);
+
+    int updatePassword(@Param("id") Integer id, @Param("password") String password);
 }
