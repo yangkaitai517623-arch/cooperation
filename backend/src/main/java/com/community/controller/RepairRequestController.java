@@ -2,6 +2,7 @@ package com.community.controller;
 
 import com.community.dto.PageResult;
 import com.community.dto.Result;
+import com.community.dto.ServiceOrderReviewRequest;
 import com.community.entity.RepairRequest;
 import com.community.entity.SysUser;
 import com.community.service.RepairRequestService;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/repair-requests")
 @RequiredArgsConstructor
@@ -30,8 +33,10 @@ public class RepairRequestController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) Integer status,
+            @RequestParam(required = false) List<Integer> statuses,
+            @RequestParam(required = false) String scope,
             @RequestParam(required = false) String keyword) {
-        return Result.success(repairService.listRequests(page, size, status, keyword));
+        return Result.success(repairService.listRequests(page, size, status, statuses, scope, keyword, getCurrentUserId()));
     }
 
     @GetMapping("/my")
@@ -63,6 +68,16 @@ public class RepairRequestController {
     @PutMapping("/{id}/complete")
     public Result<Void> completeRequest(@PathVariable Long id) {
         return repairService.completeRequest(id, getCurrentUserId());
+    }
+
+    @PutMapping("/{id}/cancel-accept")
+    public Result<Void> cancelAccept(@PathVariable Long id) {
+        return repairService.cancelAccept(id, getCurrentUserId());
+    }
+
+    @PutMapping("/{id}/review")
+    public Result<Void> reviewOrder(@PathVariable Long id, @RequestBody ServiceOrderReviewRequest request) {
+        return repairService.reviewOrder(id, getCurrentUserId(), request.getRating(), request.getComment());
     }
 
     @PutMapping("/{id}")

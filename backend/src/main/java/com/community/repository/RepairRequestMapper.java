@@ -20,6 +20,14 @@ public interface RepairRequestMapper extends BaseMapper<RepairRequest> {
     @Select("SELECT COUNT(*) FROM repair_request WHERE status = 0 AND deleted = 0")
     int countPending();
 
+    @Select("SELECT COUNT(*) FROM repair_request " +
+            "WHERE worker_id = #{workerId} " +
+            "AND status IN (1, 2) " +
+            "AND deleted = 0 " +
+            "AND id <> #{excludeRequestId}")
+    int countActiveByWorkerIdExcludeRequest(@Param("workerId") Long workerId,
+                                            @Param("excludeRequestId") Long excludeRequestId);
+
     @Select("SELECT * FROM repair_request WHERE deleted = 0 ORDER BY created_at DESC LIMIT #{limit}")
     List<RepairRequest> findRecent(@Param("limit") int limit);
 }

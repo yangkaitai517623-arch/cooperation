@@ -26,7 +26,7 @@ public class AdminRepairController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) Integer status,
             @RequestParam(required = false) String keyword) {
-        return Result.success(repairService.listRequests(page, size, status, keyword));
+        return Result.success(repairService.listRequests(page, size, status, null, null, keyword, null));
     }
 
     @GetMapping("/{id}")

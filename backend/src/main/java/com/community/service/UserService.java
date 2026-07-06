@@ -53,6 +53,8 @@ public class UserService {
     private final NotificationMapper notificationMapper;
     private final SecondHandGoodsMapper goodsMapper;
     private final GoodsOrderMapper goodsOrderMapper;
+    private final RepairRequestMapper repairRequestMapper;
+    private final RepairOrderMapper repairOrderMapper;
 
     // ========== 安全组件 ==========
     private final PasswordEncoder passwordEncoder;
@@ -300,6 +302,7 @@ public class UserService {
         stats.setTotalUsers(userMapper.countUsers());
         stats.setActiveUsers(userMapper.countActiveUsers());
         stats.setPendingErrands(errandRequestMapper.countPending());
+        stats.setPendingRepairs(repairRequestMapper.countPending());
         stats.setTotalGoods(goodsMapper.selectCount(new LambdaQueryWrapper<>()));
         stats.setOnSaleGoods(goodsMapper.selectCount(new LambdaQueryWrapper<SecondHandGoods>()
                 .eq(SecondHandGoods::getStatus, SecondHandGoods.STATUS_ON_SALE)));
@@ -370,7 +373,12 @@ public class UserService {
 
         LambdaQueryWrapper<ErrandOrder> eow = new LambdaQueryWrapper<>();
         eow.between(ErrandOrder::getCreatedAt, start, end);
-        return goodsOrderMapper.selectCount(gow) + errandOrderMapper.selectCount(eow);
+
+        LambdaQueryWrapper<RepairOrder> row = new LambdaQueryWrapper<>();
+        row.between(RepairOrder::getCreatedAt, start, end);
+        return goodsOrderMapper.selectCount(gow)
+                + errandOrderMapper.selectCount(eow)
+                + repairOrderMapper.selectCount(row);
     }
 
     /**
@@ -478,6 +486,16 @@ public class UserService {
         }
 
         // 优先级1：紧急跑腿需求（带"紧急"标签，红色高亮）
+        long pendingRepairs = repairRequestMapper.countPending();
+        if (pendingRepairs > 0) {
+            DashboardStats.PendingItem item = new DashboardStats.PendingItem();
+            item.setTitle(pendingRepairs + "个检修需求待接单");
+            item.setTag("待接单");
+            item.setType("repair");
+            item.setLink("/admin/repair");
+            items.add(item);
+        }
+
         List<ErrandRequest> urgentErrands = errandRequestMapper.findUrgent();
         if (!urgentErrands.isEmpty()) {
             DashboardStats.PendingItem item = new DashboardStats.PendingItem();
