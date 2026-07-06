@@ -21,3 +21,10 @@ dist/
 # Local environment
 .env
 .env.local
+
+# Uploads
+uploads/
+
+# Claude / Workbuddy
+.claude/
+.workbuddy/

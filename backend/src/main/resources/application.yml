@@ -1,0 +1,57 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: community-platform
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/community_platform?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: 123456
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+    default-property-inclusion: non_null
+  web:
+    resources:
+      static-locations: classpath:/static/,file:./uploads/
+
+# MyBatis Plus
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.community.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+
+# JWT配置
+jwt:
+  secret: community-platform-secret-key-2024-very-long-and-secure
+  expiration: 86400000  # 24小时
+
+# Knife4j
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+
+# AI配置 - DeepSeek V4
+ai:
+  api-key: sk-0e8ae0ab448c4adfa5882a5e7bfea086
+  api-url: https://api.deepseek.com/v1/chat/completions
+  model: deepseek-chat
+
+# 文件上传配置
+upload:
+  path: ./uploads/
+  url-prefix: http://localhost:8080/uploads/

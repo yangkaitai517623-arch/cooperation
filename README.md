@@ -1,8 +1,154 @@
-# cooperation
+# 青青社区便民服务平台
 
-## 项目说明
+## 项目简介
 
-本仓库用于课程设计团队协作过程记录，基于 `lab0901` 的 SpringBoot + SSM + Vue 项目逐步完善社区便民服务平台相关功能。
+青青社区便民服务平台是一个为社区居民提供便捷生活服务的综合管理系统，包含**后台信息管理子系统**和**前台小程序子系统**。
+
+### 功能模块
+
+| 模块 | 功能 |
+|------|------|
+| **跑腿服务** | 发布跑腿需求、代买代送、接单管理 |
+| **检修服务** | 发布检修需求、水电维修、家电检修 |
+| **二手交易** | 发布二手商品、浏览购买、订单管理 |
+| **社区论坛** | 发帖交流、评论互动、资讯分享 |
+| **用户管理** | 注册登录、个人信息、订单查看 |
+| **后台管理** | 数据统计、商品审核、订单管理、用户管理 |
+
+### AI 智能功能
+
+- **需求智能分类**: 用户发布需求时，AI自动提取服务类型、紧急程度和技能标签
+- **商品智能估价**: 用户发布二手商品时，AI给出合理估价区间并优化商品描述
+
+## 技术栈
+
+| 层级 | 技术 |
+|------|------|
+| **前端** | Vue 3 + Element Plus + Vite |
+| **后端** | Spring Boot 3.2 + MyBatis Plus |
+| **数据库** | MySQL 8.0 |
+| **安全** | Spring Security + JWT |
+| **AI** | OpenAI兼容API（可替换为通义千问、文心一言等） |
+
+## 项目结构
+
+```
+cooperation/
+├── database/           # 数据库脚本
+│   └── schema.sql
+├── backend/           # Spring Boot 后端
+│   ├── pom.xml
+│   └── src/main/java/com/community/
+│       ├── entity/    # 实体类
+│       ├── repository/ # Mapper接口
+│       ├── service/   # 业务逻辑
+│       ├── controller/ # 控制器
+│       ├── dto/       # 数据传输对象
+│       └── config/    # 配置类
+└── frontend/          # Vue 前端
+    ├── package.json
+    └── src/
+        ├── views/     # 页面组件
+        ├── api/       # API请求
+        ├── router/    # 路由配置
+        └── store/     # 状态管理
+```
+
+## 快速开始
+
+### 1. 数据库初始化
+
+```bash
+# 登录MySQL
+mysql -u root -p
+
+# 执行建表脚本
+source database/schema.sql
+```
+
+### 2. 启动后端
+
+```bash
+cd backend
+
+# 修改数据库配置 (application.yml)
+# spring.datasource.url=jdbc:mysql://localhost:3306/community_platform
+# spring.datasource.username=root
+# spring.datasource.password=your_password
+
+# 编译运行
+mvn spring-boot:run
+```
+
+后端启动后访问: http://localhost:8080/doc.html (API文档)
+
+### 3. 启动前端
+
+```bash
+cd frontend
+
+# 安装依赖
+npm install
+
+# 启动开发服务器
+npm run dev
+```
+
+前端启动后访问: http://localhost:3000
+
+### 4. 配置AI服务 (可选)
+
+在 `backend/src/main/resources/application.yml` 中配置AI API:
+
+```yaml
+ai:
+  api-key: your-api-key
+  api-url: https://api.openai.com/v1/chat/completions
+  model: gpt-3.5-turbo
+```
+
+支持的AI服务:
+- OpenAI GPT
+- 通义千问 (阿里云)
+- 文心一言 (百度)
+- 智谱ChatGLM
+
+## 默认账号
+
+| 角色 | 用户名 | 密码 |
+|------|--------|------|
+| 超级管理员 | admin | admin123 |
+| 普通用户 | zhangsan | admin123 |
+
+## API接口
+
+### 认证接口
+- `POST /api/auth/login` - 登录
+- `POST /api/auth/register` - 注册
+
+### 用户接口
+- `GET /api/user/profile` - 获取个人信息
+- `PUT /api/user/profile` - 更新个人信息
+
+### 商品接口
+- `GET /api/goods` - 商品列表
+- `POST /api/goods` - 发布商品
+
+### 需求接口
+- `GET /api/repair-requests` - 检修需求列表
+- `POST /api/repair-requests` - 发布检修需求
+- `GET /api/errand-requests` - 跑腿需求列表
+- `POST /api/errand-requests` - 发布跑腿需求
+
+### AI接口
+- `POST /api/ai/classify` - AI需求分类
+- `POST /api/ai/estimate-price` - AI商品估价
+
+### 管理员接口
+- `GET /api/admin/users` - 用户管理
+- `GET /api/admin/goods` - 商品管理
+- `GET /api/admin/repair` - 检修管理
+- `GET /api/admin/errand` - 跑腿管理
 
 ## 我的负责内容
 
@@ -12,85 +158,37 @@
 - 个人信息后端逻辑
 - 检修服务后端逻辑
 
-本阶段优先完成个人信息后端逻辑。
+## 开发说明
 
-## 技术栈
-
-- 后端：SpringBoot 2.7.18、MyBatis、MySQL
-- 前端：Vue3、Vite、Axios
-- 版本管理：Git + GitHub
-
-## 项目结构
-
-```text
-lab0901/
-├── springboot-ssm-example/   # 后端项目
-│   ├── src/main/java/com/example/
-│   │   ├── controller/       # 控制层
-│   │   ├── service/          # 业务层
-│   │   ├── mapper/           # 数据访问层
-│   │   └── entity/           # 实体类
-│   └── src/main/resources/
-│       └── mapper/           # MyBatis XML
-└── vue-demo/                 # 前端项目，本阶段暂不修改
-```
-
-## 开发记录
-
-本仓库按模块记录课程设计后端功能的开发进度。每个功能完成后，会在提交记录和本文档中说明对应的接口、业务规则和已处理的问题。
-
-## 当前进度
-
-- 已建立合作仓库说明。
-- 已提交个人信息后端逻辑 v1 初始版本。
-- 已提交个人信息后端逻辑 v2 修复版本。
-- v1 已知问题：资料查询和更新依赖前端传入用户 ID，后端尚未校验“只能操作自己的资料”，也缺少手机号、邮箱等字段格式校验。
-- v2 修复内容：改为通过 `X-User-Id` 表示当前登录用户，后端强制覆盖请求体 ID；补充姓名、年龄、手机号、邮箱校验；新增修改密码接口并校验原密码。
-- 下一步：继续完善二手商品或检修模块后端逻辑。
-
-## 个人信息后端接口记录
-
-### v1 初始版本
-
-- `GET /user/profile/{id}`：根据用户 ID 查询个人资料。
-- `PUT /user/profile`：根据请求体中的 `id` 更新个人资料。
-
-该版本存在权限边界不足问题，后续版本已继续修复。
-
-### v2 修复版本
-
-- `GET /user/profile`：从请求头 `X-User-Id` 获取当前用户，查询自己的资料。
-- `PUT /user/profile`：从请求头 `X-User-Id` 获取当前用户，后端覆盖请求体中的 `id`，只能修改自己的资料。
-- `PUT /user/password`：校验原密码后修改新密码。
-
-示例请求头：
-
-```http
-X-User-Id: 1
-```
-
-## 运行说明
-
-后端项目目录：
+### 后端开发
 
 ```bash
-cd springboot-ssm-example
+cd backend
+
+# 运行测试
+mvn test
+
+# 打包
+mvn package
 ```
 
-使用 Maven Wrapper 启动或测试：
+### 前端开发
 
 ```bash
-./mvnw spring-boot:run
+cd frontend
+
+# 开发模式
+npm run dev
+
+# 构建生产版本
+npm run build
 ```
 
-Windows PowerShell：
+## 课程设计要点
 
-```powershell
-.\mvnw.cmd spring-boot:run
-```
-
-数据库初始化脚本：
-
-```text
-springboot-ssm-example/database.sql
-```
+1. **前后端分离架构**: Vue + Spring Boot 完全分离
+2. **RESTful API设计**: 标准REST接口规范
+3. **JWT认证**: 无状态Token认证机制
+4. **AI能力集成**: 大模型API调用与Prompt工程
+5. **数据库设计**: 规范化关系型数据库设计
+6. **响应式前端**: 移动端友好的UI设计
