@@ -12,5 +12,21 @@
         SELECT * FROM user 
         WHERE name = #{name} AND password = #{password}
     </select>
+
+    <select id="findById" resultType="User">
+        SELECT * FROM user
+        WHERE id = #{id}
+    </select>
+
+    <update id="updateProfile">
+        UPDATE user
+        SET name = #{name},
+            age = #{age},
+            phone = #{phone},
+            email = #{email},
+            building = #{building},
+            room = #{room}
+        WHERE id = #{id}
+    </update>
     
 </mapper>

@@ -39,4 +39,34 @@ public class UserController {
         
         return resultMap;
     }
+
+    @GetMapping("/profile/{id}")
+    public Map<String, Object> getProfile(@PathVariable Integer id) {
+        Map<String, Object> resultMap = new HashMap<>();
+        User profile = userService.getProfile(id);
+        if (profile == null) {
+            resultMap.put("code", 404);
+            resultMap.put("msg", "用户不存在");
+            return resultMap;
+        }
+        profile.setPassword(null);
+        resultMap.put("code", 200);
+        resultMap.put("msg", "查询成功");
+        resultMap.put("data", profile);
+        return resultMap;
+    }
+
+    @PutMapping("/profile")
+    public Map<String, Object> updateProfile(@RequestBody User user) {
+        Map<String, Object> resultMap = new HashMap<>();
+        boolean success = userService.updateProfile(user);
+        if (success) {
+            resultMap.put("code", 200);
+            resultMap.put("msg", "资料更新成功");
+        } else {
+            resultMap.put("code", 500);
+            resultMap.put("msg", "资料更新失败");
+        }
+        return resultMap;
+    }
 }

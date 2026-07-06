@@ -9,4 +9,8 @@ public interface UserService {
     List<User> findAll();
     
     User login(String name, String password);
+
+    User getProfile(Integer id);
+
+    boolean updateProfile(User user);
 }

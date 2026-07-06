@@ -12,4 +12,8 @@ public interface UserMapper {
     List<User> findAll();
     
     User login(@Param("name") String name, @Param("password") String password);
+
+    User findById(@Param("id") Integer id);
+
+    int updateProfile(User user);
 }
