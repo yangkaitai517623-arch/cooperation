@@ -11,7 +11,7 @@
         <el-menu-item index="/admin/dashboard"><el-icon><DataAnalysis /></el-icon><template #title>数据概览</template></el-menu-item>
         <!-- 信息管理子菜单 -->
         <el-sub-menu index="info"><template #title><el-icon><Grid /></el-icon><span>信息管理</span></template>
-          <el-menu-item index="/admin/errand">跑腿需求</el-menu-item><el-menu-item index="/admin/errand-orders">跑腿订单</el-menu-item><el-menu-item index="/admin/notices">通知管理</el-menu-item>
+          <el-menu-item index="/admin/errand">跑腿需求</el-menu-item><el-menu-item index="/admin/errand-orders">跑腿订单</el-menu-item><el-menu-item index="/admin/forum">资讯论坛</el-menu-item><el-menu-item index="/admin/comments">评论管理</el-menu-item><el-menu-item index="/admin/notices">通知管理</el-menu-item>
         </el-sub-menu>
         <!-- 用户管理子菜单 -->
         <el-sub-menu index="user"><template #title><el-icon><User /></el-icon><span>用户管理</span></template>

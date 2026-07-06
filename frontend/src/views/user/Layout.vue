@@ -163,11 +163,12 @@ const isAdmin = computed(() => store.user?.role >= 1)
 const navItems = [
   { path: '/home', label: '首页', svg: '<path d="M3 9.5L12 4l9 5.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 21V12h6v9" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>' },
   { path: '/errands', label: '跑腿帮忙', svg: '<path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>' },
+  { path: '/forum', label: '邻里广场', svg: '<path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>' },
   { path: '/profile', label: '个人中心', svg: '<path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.8"/>' }
 ]
 
 /** 路由路径与页面标题的映射表 */
-const routeTitleMap = { '/home': '首页', '/errands': '跑腿帮忙', '/profile': '个人中心' }
+const routeTitleMap = { '/home': '首页', '/errands': '跑腿帮忙', '/forum': '邻里广场', '/profile': '个人中心' }
 /** 当前页面标题（计算属性），根据当前路由路径计算 */
 const currentTitle = computed(() => routeTitleMap[route.path] || '首页')
 

@@ -94,6 +94,22 @@ const routes = [
         meta: { title: '跑腿订单管理' }
       },
 
+      /* 论坛帖子管理 */
+      {
+        path: 'forum',
+        name: 'AdminForum',
+        component: () => import('@/views/admin/Forum.vue'),
+        meta: { title: '资讯论坛管理' }
+      },
+
+      /* 评论管理 */
+      {
+        path: 'comments',
+        name: 'AdminComments',
+        component: () => import('@/views/admin/Comments.vue'),
+        meta: { title: '评论管理' }
+      },
+
       /* 通知管理 */
       {
         path: 'notices',
@@ -138,6 +154,22 @@ const routes = [
         name: 'UserErrands',
         component: () => import('@/views/user/Errands.vue'),
         meta: { title: '跑腿需求' }
+      },
+
+      /* 社区论坛（邻里广场） */
+      {
+        path: 'forum',
+        name: 'UserForum',
+        component: () => import('@/views/user/Forum.vue'),
+        meta: { title: '邻里广场' }
+      },
+
+      /* 帖子详情页 */
+      {
+        path: 'forum/:id',
+        name: 'PostDetail',
+        component: () => import('@/views/user/PostDetail.vue'),
+        meta: { title: '帖子详情' }
       },
 
       /* 个人信息页 */
