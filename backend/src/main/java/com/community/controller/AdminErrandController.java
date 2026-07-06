@@ -73,11 +73,11 @@ public class AdminErrandController {
         if (status != null) {
             wrapper.eq(ErrandRequest::getStatus, status);
         }
-        // 按标题和描述关键词模糊搜索
+        // 按标题和描述关键词模糊搜索（用 and 包裹 or，避免破坏外层条件优先级）
         if (StringUtils.hasText(keyword)) {
-            wrapper.like(ErrandRequest::getTitle, keyword)
-                   .or()
-               .like(ErrandRequest::getDescription, keyword);
+            wrapper.and(w -> w.like(ErrandRequest::getTitle, keyword)
+                    .or()
+                    .like(ErrandRequest::getDescription, keyword));
         }
         // 按跑腿类型筛选
         if (StringUtils.hasText(errandType)) {

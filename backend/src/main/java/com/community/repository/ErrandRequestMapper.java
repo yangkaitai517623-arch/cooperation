@@ -68,7 +68,7 @@ public interface ErrandRequestMapper extends BaseMapper<ErrandRequest> {
      *
      * @return 紧急且待接单的跑腿需求列表
      */
-    @Select("SELECT * FROM errand_request WHERE urgency = 1 AND status = 0 ORDER BY created_at DESC")
+    @Select("SELECT * FROM errand_request WHERE urgency = 2 AND status = 0 ORDER BY created_at DESC")
     List<ErrandRequest> findUrgent();
 
     /**

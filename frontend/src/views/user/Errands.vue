@@ -187,19 +187,21 @@ async function loadUid () { try { const { data } = await api.get('/user/profile'
 
 /**
  * 加载各状态数量统计
- * API: GET /errand-requests?page=1&size=999
- * 按状态计算：待接单(0)、进行中(2)、已完成(3)、总计
+ * 并行请求各状态的分页数据（size=1），利用 total 字段获取精确计数
+ * 避免一次拉取全量数据
  */
 async function loadCounts () {
   try {
-    const { data } = await api.get('/errand-requests', { params: { page: 1, size: 999 } })
-    if (data.code === 200) {
-      const all = data.data?.records || []
-      quickItems.value[0].count = all.filter(d => d.status === 0).length
-      quickItems.value[1].count = all.filter(d => d.status === 2).length
-      quickItems.value[2].count = all.filter(d => d.status === 3).length
-      quickItems.value[3].count = all.length
-    }
+    const [p0, p2, p3, pAll] = await Promise.all([
+      api.get('/errand-requests', { params: { page: 1, size: 1, status: 0 } }),
+      api.get('/errand-requests', { params: { page: 1, size: 1, status: 2 } }),
+      api.get('/errand-requests', { params: { page: 1, size: 1, status: 3 } }),
+      api.get('/errand-requests', { params: { page: 1, size: 1 } })
+    ])
+    quickItems.value[0].count = p0.data.code === 200 ? (p0.data.data?.total || 0) : 0
+    quickItems.value[1].count = p2.data.code === 200 ? (p2.data.data?.total || 0) : 0
+    quickItems.value[2].count = p3.data.code === 200 ? (p3.data.data?.total || 0) : 0
+    quickItems.value[3].count = pAll.data.code === 200 ? (pAll.data.data?.total || 0) : 0
   } catch {}
 }
 

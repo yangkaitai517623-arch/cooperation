@@ -16,6 +16,7 @@
           <el-select v-model="filterStatus" placeholder="状态筛选" clearable @change="handleSearch">
             <el-option label="全部" value="" />
             <el-option label="待接单" value="pending" />
+            <el-option label="已接单" value="accepted" />
             <el-option label="进行中" value="in_progress" />
             <el-option label="已完成" value="completed" />
           </el-select>
@@ -71,6 +72,7 @@
         <el-table-column label="操作" min-width="200">
           <template #default="{ row }">
             <el-button type="primary" size="small" @click="handleView(row)">查看详情</el-button>
+            <el-button type="success" size="small" @click="handleAssign(row)">分配</el-button>
             <el-button type="danger" size="small" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
@@ -164,7 +166,7 @@ const getUrgencyType = (urgency) => ({ 1: 'danger', 2: 'warning', 3: 'info' }[ur
 const getUrgencyText = (urgency) => ({ 1: '紧急', 2: '一般', 3: '不急' }[urgency] || urgency)
 
 /** 筛选器值映射 */
-const statusMap = { 'pending': 0, 'in_progress': 2, 'completed': 3 }
+const statusMap = { 'pending': 0, 'accepted': 1, 'in_progress': 2, 'completed': 3 }
 
 /**
  * 加载跑腿需求列表
