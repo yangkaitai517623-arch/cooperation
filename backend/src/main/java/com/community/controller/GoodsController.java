@@ -37,7 +37,7 @@ public class GoodsController {
 
     @GetMapping("/{id}")
     public Result<SecondHandGoods> getGoods(@PathVariable Long id) {
-        SecondHandGoods goods = goodsService.getGoodsById(id);
+        SecondHandGoods goods = goodsService.getGoodsDetail(id, true);
         if (goods == null) {
             return Result.error("商品不存在");
         }

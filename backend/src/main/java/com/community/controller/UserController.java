@@ -44,6 +44,9 @@ public class UserController {
         try {
             // 从安全上下文中获取当前登录用户ID
             Long userId = getCurrentUserId();
+            if (userId == null) {
+                return Result.unauthorized();
+            }
             // 根据ID查询用户信息
             SysUser user = userService.getUserById(userId);
             if (user == null) {
@@ -72,6 +75,9 @@ public class UserController {
         try {
             // 确保只能修改当前用户自己的信息
             Long userId = getCurrentUserId();
+            if (userId == null) {
+                return Result.unauthorized();
+            }
             user.setId(userId);
             return userService.updateUser(user);
         } catch (Exception e) {
@@ -95,6 +101,9 @@ public class UserController {
     public Result<Void> changePassword(@RequestBody Map<String, String> params) {
         try {
             Long userId = getCurrentUserId();
+            if (userId == null) {
+                return Result.unauthorized();
+            }
             String oldPassword = params.get("oldPassword");
             String newPassword = params.get("newPassword");
             return userService.changePassword(userId, oldPassword, newPassword);
