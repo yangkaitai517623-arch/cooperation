@@ -51,6 +51,8 @@ public class UserService {
     private final ErrandRequestMapper errandRequestMapper;
     private final ErrandOrderMapper errandOrderMapper;
     private final NotificationMapper notificationMapper;
+    private final SecondHandGoodsMapper goodsMapper;
+    private final GoodsOrderMapper goodsOrderMapper;
 
     // ========== 安全组件 ==========
     private final PasswordEncoder passwordEncoder;
@@ -150,6 +152,9 @@ public class UserService {
      * @return 用户实体，不存在时返回 null
      */
     public SysUser getUserById(Long id) {
+        if (id == null) {
+            return null;
+        }
         return userMapper.selectById(id);
     }
 
@@ -167,14 +172,19 @@ public class UserService {
      * @return 操作结果
      */
     public Result<Void> updateUser(SysUser user) {
+        if (user == null || user.getId() == null) {
+            return Result.error("请先登录");
+        }
         SysUser existing = userMapper.selectById(user.getId());
         if (existing == null) {
             return Result.error("用户不存在");
         }
 
         // 安全措施：将密码和角色置空，防止越权修改
+        user.setUsername(null);
         user.setPassword(null);
         user.setRole(null);
+        user.setStatus(null);
 
         userMapper.updateById(user);
         return Result.success("更新成功", null);
@@ -196,11 +206,17 @@ public class UserService {
      * @return 操作结果
      */
     public Result<Void> changePassword(Long userId, String oldPwd, String newPwd) {
+        if (userId == null) {
+            return Result.error("请先登录");
+        }
         SysUser user = userMapper.selectById(userId);
         if (user == null) {
             return Result.error("用户不存在");
         }
         // 验证原密码
+        if (oldPwd == null || oldPwd.isBlank()) {
+            return Result.error("原密码不能为空");
+        }
         if (!passwordEncoder.matches(oldPwd, user.getPassword())) {
             return Result.error("原密码错误");
         }
@@ -284,6 +300,11 @@ public class UserService {
         stats.setTotalUsers(userMapper.countUsers());
         stats.setActiveUsers(userMapper.countActiveUsers());
         stats.setPendingErrands(errandRequestMapper.countPending());
+        stats.setTotalGoods(goodsMapper.selectCount(new LambdaQueryWrapper<>()));
+        stats.setOnSaleGoods(goodsMapper.selectCount(new LambdaQueryWrapper<SecondHandGoods>()
+                .eq(SecondHandGoods::getStatus, SecondHandGoods.STATUS_ON_SALE)));
+        stats.setPendingGoodsAudit(goodsMapper.selectCount(new LambdaQueryWrapper<SecondHandGoods>()
+                .eq(SecondHandGoods::getStatus, SecondHandGoods.STATUS_PENDING_AUDIT)));
 
         // ===== 2. 月度数据与环比 =====
         // 确定时间范围：本月 vs 上月
@@ -344,9 +365,12 @@ public class UserService {
      */
     private long countOrdersInRange(LocalDateTime start, LocalDateTime end) {
         // 跑腿订单
+        LambdaQueryWrapper<GoodsOrder> gow = new LambdaQueryWrapper<>();
+        gow.between(GoodsOrder::getCreatedAt, start, end);
+
         LambdaQueryWrapper<ErrandOrder> eow = new LambdaQueryWrapper<>();
         eow.between(ErrandOrder::getCreatedAt, start, end);
-        return errandOrderMapper.selectCount(eow);
+        return goodsOrderMapper.selectCount(gow) + errandOrderMapper.selectCount(eow);
     }
 
     /**
@@ -442,6 +466,16 @@ public class UserService {
      */
     private List<DashboardStats.PendingItem> loadPendingItems(long pendingErrands) {
         List<DashboardStats.PendingItem> items = new ArrayList<>();
+        long pendingGoodsAudit = goodsMapper.selectCount(new LambdaQueryWrapper<SecondHandGoods>()
+                .eq(SecondHandGoods::getStatus, SecondHandGoods.STATUS_PENDING_AUDIT));
+        if (pendingGoodsAudit > 0) {
+            DashboardStats.PendingItem item = new DashboardStats.PendingItem();
+            item.setTitle(pendingGoodsAudit + "个二手商品待审核");
+            item.setTag("待审核");
+            item.setType("goods_audit");
+            item.setLink("/admin/goods");
+            items.add(item);
+        }
 
         // 优先级1：紧急跑腿需求（带"紧急"标签，红色高亮）
         List<ErrandRequest> urgentErrands = errandRequestMapper.findUrgent();
